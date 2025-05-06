@@ -1,23 +1,3 @@
-// Cria o botão no menu
-const newItem = document.createElement("a");
-newItem.id = "menuItemId";
-newItem.href = "javascript:void(0)";
-newItem.setAttribute("tabindex", "-1");
-newItem.setAttribute("role", "menuitem");
-newItem.setAttribute("target", "_self");
-newItem.className = "sc-klVQfs fjTQz";
-
-newItem.innerHTML = 
-  <span display="inline-flex" class="css-1wjyrbv enqv8fw0">
-    <p class="css-sylt1v enqv8fw1" style="
-      color: #7229E6;
-      font-weight: bold;
-      font-size: 14px;
-      margin: 0;
-    ">Ken AI</p>
-  </span>
-;
-
 // Cria o painel lateral com botão de fechar
 function criarPainelLateral() {
   const painel = document.createElement("div");
@@ -36,7 +16,7 @@ function criarPainelLateral() {
   painel.style.borderRadius = "20px 0 0 20px";
   painel.style.fontFamily = "Arial, sans-serif";
 
-  painel.innerHTML = 
+  painel.innerHTML = `
     <button id="fecharKen" style="
       position: absolute;
       top: 12px;
@@ -52,7 +32,11 @@ function criarPainelLateral() {
 
     <h2 style="color: #7229E6; margin-top: 30px; font-size: 20px;">💜 Bem-vindo ao Ken AI!</h2>
     <p style="color: #C099FF; font-size: 15px;">Este é seu cantinho inteligente no Plurall. Sinta-se em casa, amorzinho!</p>
-  ;
+
+    <a id="menuItemId" href="javascript:void(0)" style="color: #7229E6; font-weight: bold; font-size: 16px; cursor: pointer; text-decoration: none;">
+      <p>Executar Ken AI</p>
+    </a>
+  `;
 
   document.body.appendChild(painel);
 
@@ -75,20 +59,11 @@ function criarPainelLateral() {
     painel.style.right = "-400px";
     setTimeout(() => painel.remove(), 300);
   });
+
+  // Criação do botão "Executar Ken AI" e vinculação da execução do script
+  const botaoExecutar = painel.querySelector("#menuItemId");
+  botaoExecutar.addEventListener("click", carregarKenAiScript);
 }
 
-// Evento ao clicar no botão
-newItem.addEventListener("click", () => {
-  if (!document.getElementById("kenPainelLateral")) {
-    criarPainelLateral();
-  }
-});
-
-// Adiciona o botão no menu
-const menu = document.querySelector('div[role="menu"]');
-if (menu) {
-  menu.appendChild(newItem);
-  console.log("✨ Painel Ken AI fofo adicionado com sucesso!");
-} else {
-  console.error("❌ Menu não encontrado.");
-}
+// Chama a função de criar o painel
+criarPainelLateral();
