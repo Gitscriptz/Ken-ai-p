@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ken AI</title>
+  <style>
+    /* Reset básico de estilo */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f3f3f3;
+      color: #333;
+    }
+
+    /* Hero section */
+    #hero {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #7229E6, #863BFF);
+      color: white;
+      text-align: center;
+    }
+
+    #content {
+      max-width: 600px;
+      margin: 0 20px;
+    }
+
+    #hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    #hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    #menuItemId {
+      padding: 15px 30px;
+      background-color: #FFF;
+      color: #7229E6;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      text-decoration: none;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #menuItemId:hover {
+      background-color: #7229E6;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div id="hero">
+    <div id="content">
+      <h1>Bem-vindo ao Ken AI</h1>
+      <p>O seu assistente inteligente para a plataforma Plurall. Sinta-se em casa, amorzinho!</p>
+      <a href="javascript:void(0)" id="menuItemId">Abrir Painel</a>
+    </div>
+  </div>
+
+  <script>
+    // Código para injetar o painel ao clicar no botão
+    const newItem = document.createElement("a");
+    newItem.id = "menuItemId";
+    newItem.href = "javascript:void(0)";
+    newItem.setAttribute("tabindex", "-1");
+    newItem.setAttribute("role", "menuitem");
+    newItem.setAttribute("target", "_self");
+    newItem.className = "sc-klVQfs fjTQz";
+
+    newItem.innerHTML = `
+      <span display="inline-flex" class="css-1wjyrbv enqv8fw0">
+        <p class="css-sylt1v enqv8fw1" style="
+          color: #7229E6;
+          font-weight: bold;
+          font-size: 14px;
+          margin: 0;
+        ">Ken AI</p>
+      </span>
+    `;
+
+    // Função para criar o painel lateral
+    function criarPainelLateral() {
+      const painel = document.createElement("div");
+      painel.id = "kenPainelLateral";
+      painel.style.position = "fixed";
+      painel.style.top = "20px";
+      painel.style.right = "-400px";
+      painel.style.width = "320px";
+      painel.style.height = "calc(100% - 40px)";
+      painel.style.background = "#EEE3FF";
+      painel.style.borderLeft = "4px solid #863BFF";
+      painel.style.boxShadow = "-2px 0 15px rgba(0,0,0,0.15)";
+      painel.style.transition = "right 0.4s ease";
+      painel.style.zIndex = "9999";
+      painel.style.padding = "24px 20px";
+      painel.style.borderRadius = "20px 0 0 20px";
+      painel.style.fontFamily = "Arial, sans-serif";
+
+      painel.innerHTML = `
+        <button id="fecharKen" style="
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: transparent;
+          border: none;
+          font-size: 18px;
+          font-weight: bold;
+          color: #7229E6;
+          cursor: pointer;
+          transition: transform 0.2s ease, color 0.2s ease;
+        " title="Fechar painel">✖</button>
+
+        <h2 style="color: #7229E6; margin-top: 30px; font-size: 20px;">💜 Bem-vindo ao Ken AI!</h2>
+        <p style="color: #C099FF; font-size: 15px;">Este é seu cantinho inteligente no Plurall. Sinta-se em casa, amorzinho!</p>
+      `;
+
+      document.body.appendChild(painel);
+
+      // Aplica animação para aparecer
+      setTimeout(() => {
+        painel.style.right = "20px";
+      }, 10);
+
+      // Evento de fechar
+      const btnFechar = painel.querySelector("#fecharKen");
+      btnFechar.addEventListener("click", () => {
+        painel.style.right = "-400px";
+        setTimeout(() => painel.remove(), 300);
+      });
+    }
+
+    // Evento de click para carregar o painel
+    newItem.addEventListener("click", () => {
+      // Carregar o script remoto usando Fetch
+      fetch('https://raw.githubusercontent.com/Gitscriptz/Ken-ai-p/refs/heads/main/ken.js')
+        .then(response => response.text())
+        .then(scriptContent => {
+          const script = document.createElement('script');
+          script.textContent = scriptContent;  // Inserir o conteúdo do script no documento
+          document.body.appendChild(script);
+          console.log("💜 Painel Ken AI carregado com sucesso!");
+        })
+        .catch(error => {
+          console.error("❌ Falha ao carregar o painel remoto:", error);
+        });
+    });
+
+    // Adiciona o botão no menu
+    const menu = document.querySelector('#hero');
+    if (menu) {
+      menu.appendChild(newItem);
+      console.log("✨ Botão Ken AI adicionado com sucesso!");
+    } else {
+      console.error("❌ Menu não encontrado.");
+    }
+  </script>
+</body>
+</html>
