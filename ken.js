@@ -32,6 +32,10 @@ function criarPainelLateral() {
 
     <h2 style="color: #7229E6; margin-top: 30px; font-size: 20px;">💜 Bem-vindo ao Ken AI!</h2>
     <p style="color: #C099FF; font-size: 15px;">Este é seu cantinho inteligente no Plurall. Sinta-se em casa, amorzinho!</p>
+
+    <a id="menuItemId" href="javascript:void(0)" style="color: #7229E6; font-weight: bold; font-size: 16px; cursor: pointer; text-decoration: none;">
+      <p>Executar Ken AI</p>
+    </a>
   `;
 
   document.body.appendChild(painel);
@@ -56,36 +60,38 @@ function criarPainelLateral() {
     setTimeout(() => painel.remove(), 300);
   });
 
-  // Cria o botão do Ken AI
-  const newItem = document.createElement("a");
-  newItem.id = "menuItemId";
-  newItem.href = "javascript:void(0)";
-  newItem.setAttribute("tabindex", "-1");
-  newItem.setAttribute("role", "menuitem");
-  newItem.setAttribute("target", "_self");
-  newItem.className = "sc-klVQfs fjTQz";
-
-  newItem.innerHTML = `
-    <span display="inline-flex" class="css-1wjyrbv enqv8fw0">
-      <p class="css-sylt1v enqv8fw1" style="
-        color: #7229E6;
-        font-weight: bold;
-        font-size: 14px;
-        margin: 0;
-      ">Ken AI</p>
-    </span>
-  `;
-
-  // Localiza o menu onde os botões ficam
-  const menuContainer = document.querySelector('div[role="menu"].sc-hRJfrW');
-  if (menuContainer) {
-      // Adiciona o botão ao menu
-      menuContainer.appendChild(newItem);
-      console.log("[KEN-AI] ✅ Botão inserido no menu com sucesso!");
-  } else {
-      console.error("[KEN-AI] ❌ Menu de destino não encontrado na página.");
-  }
+  // Criação do botão "Executar Ken AI" e vinculação da execução do script
+  const botaoExecutar = painel.querySelector("#menuItemId");
+  botaoExecutar.addEventListener("click", carregarKenAiScript);
 }
 
 // Chama a função de criar o painel
 criarPainelLateral();
+
+// Define a função de carregar e executar o script como blob
+async function carregarKenAiScript() {
+    console.log("[KEN-AI] ⏳ Carregando script remoto via Blob...");
+    try {
+        const res = await fetch("https://raw.githubusercontent.com/Gitscriptz/Ken-ai-p/refs/heads/main/ken.js");
+        if (!res.ok) throw new Error("Erro ao buscar o script remoto. Status: " + res.status);
+
+        const codigo = await res.text();
+        const blob = new Blob([codigo], { type: "application/javascript" });
+        const blobUrl = URL.createObjectURL(blob);
+
+        const script = document.createElement("script");
+        script.src = blobUrl;
+        script.onload = () => {
+            console.log("[KEN-AI] ✅ Script carregado e executado com sucesso!");
+            URL.revokeObjectURL(blobUrl); // limpa o objeto depois de carregar
+        };
+        script.onerror = (e) => {
+            console.error("[KEN-AI] ❌ Erro ao carregar script via Blob.", e);
+        };
+
+        document.body.appendChild(script);
+    } catch (err) {
+        console.error("[KEN-AI] ❌ Falha geral ao executar o script:");
+        console.error(err);
+    }
+}
