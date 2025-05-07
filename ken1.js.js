@@ -1,28 +1,22 @@
- function criarPainelLateral() {
+function criarPainelLateral() {
     if (document.getElementById('kenAIPainel')) return;
 
     const painel = document.createElement('div');
     painel.id = 'kenAIPainel';
     painel.style = `
         position: fixed;
-        top: 50%;
-        transform: translateY(-50%);
-        right: -420px;
-        width: 420px;
-        height: 500px;
-        max-height: 90vh;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow: -5px 0 30px rgba(114, 41, 230, 0.1);
+        top: 0;
+        right: -450px;
+        width: 450px;
+        height: 650px;
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: -5px 0 30px rgba(114, 41, 230, 0.15);
         transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 2147483647;
         display: flex;
         flex-direction: column;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        border-radius: 20px 0 0 20px;
-        border: 1px solid rgba(114, 41, 230, 0.1);
-        overflow: hidden;
+        border-left: 1px solid rgba(114, 41, 230, 0.1);
     `;
 
     const header = document.createElement('div');
@@ -35,6 +29,10 @@
         align-items: center;
         position: relative;
         overflow: hidden;
+        height: 80px;
+        background: linear-gradient(135deg, var(--colors-brand40), var(--colors-brand30));
+        padding: 0 24px;
+        position: relative;
     `;
 
     // Adiciona efeito de brilho no header
@@ -89,77 +87,135 @@
         border-radius: 50%;
     `;
 
-    // Área de mensagens
+    // Adiciona menu de opções
+    const menuOpcoes = document.createElement('div');
+    menuOpcoes.style = `
+        position: absolute;
+        top: 80px;
+        right: 0;
+        width: 100%;
+        background: white;
+        border-bottom: 1px solid rgba(114, 41, 230, 0.1);
+        padding: 12px 24px;
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        &::-webkit-scrollbar { height: 0; }
+    `;
+
+    const opcoes = ['Chat', 'Recursos', 'Configurações', 'Ajuda'];
+    opcoes.forEach(opcao => {
+        const btn = document.createElement('button');
+        btn.textContent = opcao;
+        btn.style = `
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: ${opcao === 'Chat' ? 'var(--colors-brand40)' : 'var(--colors-brand10)'};
+            color: ${opcao === 'Chat' ? 'white' : 'var(--colors-brand40)'};
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 300ms ease;
+            white-space: nowrap;
+        `;
+        menuOpcoes.appendChild(btn);
+    });
+
+    // Área de mensagens aprimorada
     const mensagens = document.createElement('div');
     mensagens.style = `
         flex: 1;
         overflow-y: auto;
-        padding: 20px;
+        padding: 24px;
         display: flex;
         flex-direction: column;
         gap: 16px;
-        background: linear-gradient(to bottom, var(--colors-brand10), rgba(238, 227, 255, 0.5));
-        scroll-behavior: smooth;
-        &::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        &::-webkit-scrollbar-thumb {
-            background: var(--colors-brand20);
-            border-radius: 3px;
-        }
-        &::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05);
-        }
+        background: linear-gradient(180deg, #ffffff 0%, var(--colors-brand10) 100%);
     `;
 
-    // Mensagens simuladas
-    const mensagensSimuladas = [
-        { tipo: 'bot', texto: 'Olá! Eu sou o Ken AI, seu assistente pessoal. Como posso ajudar você hoje? 👋', delay: 0 },
-        { tipo: 'user', texto: 'Oi! Pode me ajudar com as atividades?', delay: 1000 },
-        { tipo: 'bot', texto: 'Claro! Estou aqui para auxiliar você com suas atividades. Pode me dizer qual matéria você está estudando? 📚', delay: 2000 }
-    ];
-
+    // Função de mensagem aprimorada
     function criarMensagem(tipo, texto) {
+        const msgContainer = document.createElement('div');
+        msgContainer.style = `
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            ${tipo === 'bot' ? '' : 'flex-direction: row-reverse;'}
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        `;
+
+        const avatar = document.createElement('div');
+        avatar.innerHTML = tipo === 'bot' ? '🤖' : '👤';
+        avatar.style = `
+            width: 32px;
+            height: 32px;
+            background: ${tipo === 'bot' ? 'var(--colors-brand10)' : 'var(--colors-brand20)'};
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        `;
+
         const msg = document.createElement('div');
         msg.style = `
-            max-width: 80%;
+            max-width: calc(100% - 50px);
             padding: 12px 16px;
-            border-radius: ${tipo === 'bot' ? '2px 15px 15px 15px' : '15px 2px 15px 15px'};
+            border-radius: ${tipo === 'bot' ? '4px 16px 16px 16px' : '16px 4px 16px 16px'};
             background: ${tipo === 'bot' ? 'white' : 'var(--colors-brand40)'};
             color: ${tipo === 'bot' ? '#1a1a1a' : 'white'};
-            align-self: ${tipo === 'bot' ? 'flex-start' : 'flex-end'};
-            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
             font-size: 14px;
             line-height: 1.6;
-            letter-spacing: 0.3px;
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-            animation: messageIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
             border: 1px solid ${tipo === 'bot' ? 'rgba(0,0,0,0.05)' : 'transparent'};
         `;
         msg.textContent = texto;
-        return msg;
+
+        msgContainer.appendChild(avatar);
+        msgContainer.appendChild(msg);
+        return msgContainer;
     }
 
-    // Adiciona mensagens simuladas com delay
-    mensagensSimuladas.forEach((mensagem, index) => {
-        setTimeout(() => {
-            mensagens.appendChild(criarMensagem(mensagem.tipo, mensagem.texto));
-        }, mensagem.delay);
-    });
-
-    // Área de input
+    // Área de input aprimorada
     const inputContainer = document.createElement('div');
     inputContainer.style = `
-        padding: 16px 20px;
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(5px);
+        padding: 20px 24px;
+        background: white;
         border-top: 1px solid rgba(114, 41, 230, 0.1);
         display: flex;
+        flex-direction: column;
         gap: 12px;
-        position: relative;
     `;
+
+    // Barra de ferramentas
+    const toolbar = document.createElement('div');
+    toolbar.style = `
+        display: flex;
+        gap: 8px;
+        padding-bottom: 8px;
+    `;
+
+    ['📎', '😊', '🎤', '📷'].forEach(icon => {
+        const btn = document.createElement('button');
+        btn.innerHTML = icon;
+        btn.style = `
+            background: none;
+            border: none;
+            padding: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 300ms ease;
+            &:hover {
+                background: var(--colors-brand10);
+            }
+        `;
+        toolbar.appendChild(btn);
+    });
 
     const input = document.createElement('textarea');
     input.placeholder = 'Digite sua mensagem...';
@@ -267,10 +323,12 @@
     titulo.appendChild(tituloText);
     header.appendChild(titulo);
     header.appendChild(btnFechar);
+    inputContainer.appendChild(toolbar);
     inputContainer.appendChild(input);
     inputContainer.appendChild(btnEnviar);
     
     painel.appendChild(header);
+    painel.appendChild(menuOpcoes);
     painel.appendChild(mensagens);
     painel.appendChild(inputContainer);
     
@@ -296,8 +354,7 @@
     document.body.appendChild(painel);
 
     requestAnimationFrame(() => {
-        painel.style.right = '20px'; // Agora para 20px da borda
-        painel.style.transform = 'translateY(-50%) scale(1)';
+        painel.style.right = '0';
     });
 }
 
