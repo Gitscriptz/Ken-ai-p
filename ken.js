@@ -6,37 +6,47 @@ function criarPainelLateral() {
     painel.style = `
         position: fixed;
         top: 0;
-        right: -400px;
-        width: 400px;
+        right: -420px;
+        width: 420px;
         height: 100vh;
-        background: white;
-        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-        transition: right 300ms ease;
-        z-index: 9999;
+        background: #ffffff;
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.15);
+        transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 999999;
         display: flex;
         flex-direction: column;
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
     `;
 
-    // Cabeçalho
     const header = document.createElement('div');
     header.style = `
-        padding: 20px;
-        background: var(--colors-brand40);
+        padding: 24px;
+        background: linear-gradient(135deg, var(--colors-brand40), var(--colors-brand30));
         color: white;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     `;
 
-    const titulo = document.createElement('h2');
-    titulo.textContent = 'Ken AI';
+    const titulo = document.createElement('div');
     titulo.style = `
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    `;
+
+    const logo = document.createElement('div');
+    logo.innerHTML = '🤖';
+    logo.style = `
+        font-size: 24px;
+        animation: pulse 2s infinite;
+    `;
+
+    const tituloText = document.createElement('div');
+    tituloText.innerHTML = `
+        <h2 style="margin: 0; font-size: 20px; font-weight: 600;">Ken AI</h2>
+        <span style="font-size: 12px; opacity: 0.8">Seu assistente inteligente</span>
     `;
 
     const btnFechar = document.createElement('button');
@@ -62,12 +72,46 @@ function criarPainelLateral() {
     mensagens.style = `
         flex: 1;
         overflow-y: auto;
-        padding: 20px;
+        padding: 24px;
         display: flex;
         flex-direction: column;
         gap: 16px;
-        background: var(--colors-brand10);
+        background: #f8f9fa;
     `;
+
+    // Mensagens simuladas
+    const mensagensSimuladas = [
+        { tipo: 'bot', texto: 'Olá! Eu sou o Ken AI, seu assistente pessoal. Como posso ajudar você hoje? 👋', delay: 0 },
+        { tipo: 'user', texto: 'Oi! Pode me ajudar com as atividades?', delay: 1000 },
+        { tipo: 'bot', texto: 'Claro! Estou aqui para auxiliar você com suas atividades. Pode me dizer qual matéria você está estudando? 📚', delay: 2000 }
+    ];
+
+    function criarMensagem(tipo, texto) {
+        const msg = document.createElement('div');
+        msg.style = `
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: ${tipo === 'bot' ? '0 15px 15px 15px' : '15px 0 15px 15px'};
+            background: ${tipo === 'bot' ? 'white' : 'var(--colors-brand40)'};
+            color: ${tipo === 'bot' ? '#1a1a1a' : 'white'};
+            align-self: ${tipo === 'bot' ? 'flex-start' : 'flex-end'};
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.5s ease forwards;
+        `;
+        msg.textContent = texto;
+        return msg;
+    }
+
+    // Adiciona mensagens simuladas com delay
+    mensagensSimuladas.forEach((mensagem, index) => {
+        setTimeout(() => {
+            mensagens.appendChild(criarMensagem(mensagem.tipo, mensagem.texto));
+        }, mensagem.delay);
+    });
 
     // Área de input
     const inputContainer = document.createElement('div');
@@ -77,6 +121,7 @@ function criarPainelLateral() {
         border-top: 1px solid rgba(0,0,0,0.1);
         display: flex;
         gap: 12px;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     `;
 
     const input = document.createElement('textarea');
@@ -181,6 +226,8 @@ function criarPainelLateral() {
     });
 
     // Monta a estrutura
+    titulo.appendChild(logo);
+    titulo.appendChild(tituloText);
     header.appendChild(titulo);
     header.appendChild(btnFechar);
     inputContainer.appendChild(input);
@@ -190,16 +237,21 @@ function criarPainelLateral() {
     painel.appendChild(mensagens);
     painel.appendChild(inputContainer);
     
-    // Adiciona estilos globais
+    // Estilos globais atualizados
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
     `;
-    document.head.appendChild(style);
 
+    document.head.appendChild(style);
     document.body.appendChild(painel);
 
     requestAnimationFrame(() => {
