@@ -1,4 +1,4 @@
-function criarPainelLateral() {
+ function criarPainelLateral() {
     if (document.getElementById('kenAIPainel')) return;
 
     const painel = document.createElement('div');
