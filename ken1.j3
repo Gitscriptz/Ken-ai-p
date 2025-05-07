@@ -1,4 +1,0 @@
-<div style="padding: 20px; background: #f0f0f0; border: 1px solid #ccc;">
-  <h2>Conteúdo Injetado</h2>
-  <p>Este HTML foi carregado via <code>fetch</code> do GitHub e injetado na página.</p>
-</div>
