@@ -9,30 +9,29 @@ function criarPainelLateral() {
         right: -450px;
         width: 450px;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.98);
-        box-shadow: -5px 0 30px rgba(114, 41, 230, 0.2);
+        background: var(--color-shade10);
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
         transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
         z-index: 2147483647 !important;
         display: flex;
         flex-direction: column;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        border-left: 1px solid rgba(114, 41, 230, 0.1);
+        border-left: 1px solid var(--color-shade30);
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
     `;
 
     // Header com design premium
     const header = document.createElement('div');
     header.style = `
         padding: 24px;
-        background: linear-gradient(135deg, var(--colors-brand40), var(--colors-brand30));
+        background: linear-gradient(135deg, var(--color-cyan40), var(--color-purple40));
         color: white;
         display: flex;
         justify-content: space-between;
         align-items: center;
         position: relative;
         overflow: hidden;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--color-shade30);
     `;
 
     // Adiciona efeito de brilho no header
@@ -106,13 +105,10 @@ function criarPainelLateral() {
         display: flex;
         gap: 20px;
         padding: 16px 24px;
-        background: rgba(255, 255, 255, 0.95);
-        border-bottom: 1px solid rgba(114, 41, 230, 0.1);
+        background: var(--color-shade10);
+        border-bottom: 1px solid var(--color-shade30);
         overflow-x: auto;
         scrollbar-width: none;
-        &::-webkit-scrollbar {
-            display: none;
-        }
     `;
 
     ['Chat', 'Recursos', 'Configurações'].forEach((item, i) => {
@@ -142,7 +138,7 @@ function criarPainelLateral() {
         flex: 1;
         display: flex;
         flex-direction: column;
-        background: linear-gradient(180deg, #ffffff 0%, var(--colors-brand10) 100%);
+        background: linear-gradient(180deg, var(--color-shade10) 0%, var(--color-purple10) 100%);
         overflow: hidden;
     `;
 
@@ -233,14 +229,15 @@ function criarPainelLateral() {
         const msgContent = document.createElement('div');
         msgContent.style = `
             max-width: calc(100% - 50px);
-            background: ${tipo === 'bot' ? 'white' : 'var(--colors-brand40)'};
-            color: ${tipo === 'bot' ? '#1a1a1a' : 'white'};
+            background: ${tipo === 'bot' ? 'white' : 'var(--color-cyan40)'};
+            color: ${tipo === 'bot' ? 'var(--color-shade80)' : 'white'};
             padding: 12px 16px;
             border-radius: ${tipo === 'bot' ? '4px 16px 16px 16px' : '16px 4px 16px 16px'};
             font-size: 14px;
             line-height: 1.6;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             white-space: pre-line;
+            border: 1px solid ${tipo === 'bot' ? 'var(--color-shade30)' : 'transparent'};
         `;
         msgContent.textContent = texto;
 
@@ -277,6 +274,14 @@ function criarPainelLateral() {
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     `;
 
     // Montagem da estrutura
@@ -293,7 +298,7 @@ function criarPainelLateral() {
     // Animação de entrada suave
     requestAnimationFrame(() => {
         painel.style.right = '0';
-        painel.style.animation = 'slideIn 400ms cubic-bezier(0.16, 1, 0.3, 1)';
+        painel.style.animation = 'slideIn 400ms cubic-bezier(0.16, 1, 0.3, 1), fadeIn 400ms ease';
     });
 
     // Adiciona mensagens iniciais com delay
