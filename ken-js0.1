@@ -309,13 +309,102 @@ function criarPainelLateral() {
     // Atualiza mensagens iniciais
     mensagens.innerHTML = welcomeScreen;
 
+    // Adicionar área de input que estava faltando
+    const inputArea = document.createElement('div');
+    inputArea.style = `
+        padding: 20px 32px;
+        border-top: 1px solid var(--color-brand20);
+        background: white;
+    `;
+
+    const inputContainer = document.createElement('div');
+    inputContainer.style = `
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        background: white;
+        padding: 8px 8px 8px 20px;
+        border-radius: 30px;
+        border: 2px solid var(--color-brand10);
+        transition: all 300ms ease;
+        &:focus-within {
+            border-color: var(--color-brand30);
+            box-shadow: 0 0 0 3px var(--color-brand10);
+        }
+    `;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Digite sua mensagem...';
+    input.style = `
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        outline: none;
+        color: var(--color-black);
+    `;
+
+    const btnEnviar = document.createElement('button');
+    btnEnviar.innerHTML = '➤';
+    btnEnviar.style = `
+        background: var(--color-brand40);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        color: white;
+        cursor: pointer;
+        transition: all 300ms ease;
+        font-size: 18px;
+        &:hover {
+            background: var(--color-brand30);
+            transform: scale(1.05);
+        }
+    `;
+
+    inputContainer.appendChild(input);
+    inputContainer.appendChild(btnEnviar);
+    inputArea.appendChild(inputContainer);
+    chatArea.appendChild(inputArea);
+
     // Montagem da estrutura
     chatArea.appendChild(mensagens);
     painel.appendChild(header);
     painel.appendChild(menu);
     painel.appendChild(chatArea);
 
-    // ...remaining code...
+    document.body.appendChild(painel);
+
+    // Animação de entrada
+    requestAnimationFrame(() => {
+        painel.style.right = '0';
+    });
+
+    // Funcionalidade de enviar mensagem
+    btnEnviar.addEventListener('click', () => {
+        if (input.value.trim()) {
+            const userMsg = criarMensagem('user', input.value);
+            mensagens.appendChild(userMsg);
+            input.value = '';
+            mensagens.scrollTop = mensagens.scrollHeight;
+        }
+    });
+
+    // Tecla Enter para enviar
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && input.value.trim()) {
+            btnEnviar.click();
+        }
+    });
+
+    return {
+        painel,
+        input,
+        mensagens,
+        atualizarStatus
+    };
 }
 
 // Exporta a função globalmente
