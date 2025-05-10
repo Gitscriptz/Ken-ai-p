@@ -1,0 +1,292 @@
+function criarPainelLateral() {
+    if (document.getElementById('kenAIPainel')) return;
+
+    // Adiciona animações globais logo no início
+    const style = document.createElement('style');
+    style.textContent = `
+        .ken-fade-in { animation: kenFadeIn 0.3s ease-in-out; }
+        @keyframes kenGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes messageIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes headerGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    const painel = document.createElement('div');
+    painel.id = 'kenAIPainel';
+    painel.style = `
+        position: fixed !important;
+        top: 0;
+        right: -550px;
+        width: 550px;
+        height: 100vh;
+        background: var(--color-shade10);
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+        transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 2147483647 !important;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        border-left: 1px solid var(--color-shade30);
+        backdrop-filter: blur(10px);
+        border-radius: 16px 0 0 16px;
+        overflow: hidden;
+    `;
+
+    // Header com novo gradiente animado
+    const header = document.createElement('div');
+    header.style = `
+        padding: 28px 32px;
+        background: linear-gradient(-45deg, #7229E6, #4A3AFF, #0052CC, #7229E6);
+        background-size: 400% 400%;
+        animation: kenGradient 15s ease infinite;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    `;
+
+    // Adiciona efeito de brilho no header
+    header.innerHTML += `
+        <div style="
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+            animation: headerGlow 15s infinite linear;
+        "></div>
+    `;
+
+    const titulo = document.createElement('div');
+    titulo.style = `
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    `;
+
+    const logo = document.createElement('div');
+    logo.innerHTML = '🤖';
+    logo.style = `
+        font-size: 24px;
+        animation: pulse 2s infinite;
+    `;
+
+    const tituloText = document.createElement('div');
+    tituloText.innerHTML = `
+        <h2 style="margin: 0; font-size: 20px; font-weight: 600;">Ken AI</h2>
+        <span style="font-size: 12px; opacity: 0.8">Seu assistente inteligente</span>
+    `;
+
+    // Botão fechar aprimorado
+    const btnFechar = document.createElement('button');
+    btnFechar.innerHTML = `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    `;
+    btnFechar.style = `
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 300ms ease;
+        backdrop-filter: blur(4px);
+        z-index: 10;
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+    `;
+
+    // Adiciona funcionalidade de fechar
+    btnFechar.addEventListener('click', () => {
+        painel.style.right = '-550px';
+        setTimeout(() => {
+            painel.remove();
+            document.getElementById('kenAIIndicador').style.display = 'block';
+        }, 400);
+    });
+
+    // Status do AI atualizado (com indicador dinâmico)
+    const statusAI = document.createElement('div');
+    statusAI.className = 'ken-status';
+    statusAI.style = `
+        position: absolute;
+        top: 20px;
+        right: 70px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(0, 0, 0, 0.2);
+        padding: 6px 12px;
+        border-radius: 20px;
+        backdrop-filter: blur(4px);
+    `;
+    
+    // Função para atualizar status
+    function atualizarStatus(funcionando = true) {
+        statusAI.innerHTML = `
+            <span style="
+                width: 8px;
+                height: 8px;
+                background: ${funcionando ? '#50E3C2' : '#FF4D6A'};
+                border-radius: 50%;
+                box-shadow: 0 0 10px ${funcionando ? '#50E3C2' : '#FF4D6A'};
+                animation: pulse 2s infinite;
+            "></span>
+            ${funcionando ? 'Online' : 'Offline'}
+        `;
+    }
+    atualizarStatus(true);
+    header.appendChild(statusAI);
+
+    // Menu simplificado (removido Status do AI duplicado)
+    menu.style = `
+        display: flex;
+        padding: 16px 24px;
+        background: var(--color-shade10);
+        border-bottom: 1px solid var(--color-shade30);
+    `;
+
+    const chatBtn = document.createElement('button');
+    chatBtn.innerHTML = 'Chat';
+    chatBtn.style = `
+        padding: 8px 16px;
+        background: var(--color-brand40);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 300ms ease;
+        &:hover {
+            background: var(--color-brand30);
+            transform: translateY(-1px);
+        }
+    `;
+    menu.appendChild(chatBtn);
+
+    // Nova tela de boas-vindas com sugestões
+    const welcomeScreen = `
+        <div class="ken-welcome ken-fade-in" style="
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, rgba(114, 41, 230, 0.05) 0%, rgba(74, 58, 255, 0.02) 100%);
+            border-radius: 20px;
+            margin: 20px;
+        ">
+            <div style="font-size: 48px; margin-bottom: 20px;">👋</div>
+            <h2 style="
+                color: var(--color-brand40);
+                margin: 0 0 10px;
+                font-size: 24px;
+                font-weight: 600;
+            ">Bem-vindo ao Ken AI</h2>
+            <p style="
+                color: var(--color-shade60);
+                margin: 0 0 24px;
+                font-size: 15px;
+                line-height: 1.6;
+            ">Seu assistente inteligente para estudos</p>
+            
+            <div style="
+                display: grid;
+                gap: 12px;
+                max-width: 400px;
+                margin: 0 auto;
+            ">
+                <button style="
+                    text-align: left;
+                    padding: 16px;
+                    background: white;
+                    border: 1px solid var(--color-brand20);
+                    border-radius: 12px;
+                    cursor: pointer;
+                    transition: all 300ms ease;
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(114, 41, 230, 0.1);
+                    }
+                ">
+                    <div style="font-weight: 500; color: var(--color-brand40); margin-bottom: 4px;">
+                        💡 Me explique sobre...
+                    </div>
+                    <div style="font-size: 13px; color: var(--color-shade60);">
+                        Peça explicações sobre qualquer conceito
+                    </div>
+                </button>
+                <button style="
+                    text-align: left;
+                    padding: 16px;
+                    background: white;
+                    border: 1px solid var(--color-brand20);
+                    border-radius: 12px;
+                    cursor: pointer;
+                    transition: all 300ms ease;
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(114, 41, 230, 0.1);
+                    }
+                ">
+                    <div style="font-weight: 500; color: var(--color-brand40); margin-bottom: 4px;">
+                        📚 Me ajude com...
+                    </div>
+                    <div style="font-size: 13px; color: var(--color-shade60);">
+                        Peça ajuda com exercícios ou dúvidas
+                    </div>
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Atualiza mensagens iniciais
+    mensagens.innerHTML = welcomeScreen;
+}
+
+// Exporta a função globalmente
+window.criarPainelLateral = criarPainelLateral;
