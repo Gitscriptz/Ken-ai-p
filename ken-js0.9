@@ -149,20 +149,41 @@ function criarPainelLateral() {
         }, 400);
     });
 
-    // Header atualizado com botões de controle
-    const statusControls = document.createElement('div');
-    statusControls.style = `
+    // Criar menu antes de usar
+    const menu = document.createElement('div');
+    menu.style = `
         display: flex;
-        align-items: center;
-        gap: 12px;
-        position: absolute;
-        right: 70px;
-        top: 20px;
+        padding: 16px 24px;
+        background: var(--color-brand10);
+        border-bottom: 1px solid var(--color-brand20);
     `;
 
-    // Status do AI
+    const chatBtn = document.createElement('button');
+    chatBtn.innerHTML = 'Chat';
+    chatBtn.style = `
+        padding: 8px 16px;
+        background: var(--color-brand40);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 300ms ease;
+        &:hover {
+            background: var(--color-brand30);
+            transform: translateY(-1px);
+        }
+    `;
+    menu.appendChild(chatBtn);
+
+    // Status do AI atualizado (com indicador dinâmico)
     const statusAI = document.createElement('div');
+    statusAI.className = 'ken-status';
     statusAI.style = `
+        position: absolute;
+        top: 20px;
+        right: 70px;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -173,106 +194,44 @@ function criarPainelLateral() {
         border-radius: 20px;
         backdrop-filter: blur(4px);
     `;
+    
+    // Função para atualizar status
+    function atualizarStatus(funcionando = true) {
+        statusAI.innerHTML = `
+            <span style="
+                width: 8px;
+                height: 8px;
+                background: ${funcionando ? '#50E3C2' : '#FF4D6A'};
+                border-radius: 50%;
+                box-shadow: 0 0 10px ${funcionando ? '#50E3C2' : '#FF4D6A'};
+                animation: pulse 2s infinite;
+            "></span>
+            ${funcionando ? 'Online' : 'Offline'}
+        `;
+    }
+    atualizarStatus(true);
+    header.appendChild(statusAI);
 
-    // Botão Limpar Chat
-    const btnLimpar = document.createElement('button');
-    btnLimpar.innerHTML = '🗑️';
-    btnLimpar.title = 'Limpar Chat';
-    btnLimpar.style = `
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        color: white;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 300ms ease;
-        backdrop-filter: blur(4px);
-        &:hover { background: rgba(255, 255, 255, 0.2); }
-    `;
-
-    // Botão Recarregar Chat
-    const btnRecarregar = document.createElement('button');
-    btnRecarregar.innerHTML = '🔄';
-    btnRecarregar.title = 'Recarregar Chat';
-    btnRecarregar.style = btnLimpar.style;
-
-    statusControls.appendChild(statusAI);
-    statusControls.appendChild(btnLimpar);
-    statusControls.appendChild(btnRecarregar);
-    header.appendChild(statusControls);
-
-    // Input fixo na parte inferior
-    const inputContainer = document.createElement('div');
-    inputContainer.style = `
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        padding: 16px;
-        background: var(--color-shade10);
-        border-top: 1px solid var(--color-shade30);
-        display: flex;
-        gap: 8px;
-    `;
-
-    const input = document.createElement('input');
-    input.placeholder = 'Digite sua mensagem...';
-    input.style = `
+    // Criar área de chat e mensagens
+    const chatArea = document.createElement('div');
+    chatArea.style = `
         flex: 1;
-        padding: 12px 16px;
-        border: 1px solid var(--color-shade30);
-        border-radius: 24px;
-        font-size: 14px;
-        background: white;
-        &:focus {
-            outline: none;
-            border-color: var(--color-brand40);
-        }
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(180deg, var(--color-shade10) 0%, var(--color-brand10) 100%);
+        overflow: hidden;
     `;
 
-    const sendButton = document.createElement('button');
-    sendButton.innerHTML = '→';
-    sendButton.style = `
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        border: none;
-        background: var(--color-brand40);
-        color: white;
-        cursor: pointer;
-        transition: all 300ms ease;
-        &:hover {
-            background: var(--color-brand30);
-            transform: translateY(-1px);
-        }
-    `;
-
-    inputContainer.appendChild(input);
-    inputContainer.appendChild(sendButton);
-    painel.appendChild(inputContainer);
-
-    // Criar área de mensagens
     const mensagens = document.createElement('div');
-    mensagens.id = 'kenAIMensagens';
     mensagens.style = `
         flex: 1;
+        padding: 32px;
         overflow-y: auto;
-        padding: 20px;
-        padding-bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        scroll-behavior: smooth;
     `;
-
-    // Remove menu antigo e outros elementos desnecessários
-    // Mantém apenas header e área de mensagens
-    painel.innerHTML = '';
-    painel.appendChild(header);
-    painel.appendChild(mensagens);
-    painel.appendChild(inputContainer);
-    document.body.appendChild(painel); // Adicionar o painel ao body
-
-    // Anima o painel para a posição visível após ser adicionado
-    setTimeout(() => {
-        painel.style.right = '0';
-    }, 100);
 
     // Nova tela de boas-vindas com sugestões
     const welcomeScreen = `
@@ -350,10 +309,102 @@ function criarPainelLateral() {
     // Atualiza mensagens iniciais
     mensagens.innerHTML = welcomeScreen;
 
-    // Adiciona título ao header
-    titulo.appendChild(logo);
-    titulo.appendChild(tituloText);
-    header.appendChild(titulo);
+    // Adicionar área de input que estava faltando
+    const inputArea = document.createElement('div');
+    inputArea.style = `
+        padding: 20px 32px;
+        border-top: 1px solid var(--color-brand20);
+        background: white;
+    `;
+
+    const inputContainer = document.createElement('div');
+    inputContainer.style = `
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        background: white;
+        padding: 8px 8px 8px 20px;
+        border-radius: 30px;
+        border: 2px solid var(--color-brand10);
+        transition: all 300ms ease;
+        &:focus-within {
+            border-color: var(--color-brand30);
+            box-shadow: 0 0 0 3px var(--color-brand10);
+        }
+    `;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Digite sua mensagem...';
+    input.style = `
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        outline: none;
+        color: var(--color-black);
+    `;
+
+    const btnEnviar = document.createElement('button');
+    btnEnviar.innerHTML = '➤';
+    btnEnviar.style = `
+        background: var(--color-brand40);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        color: white;
+        cursor: pointer;
+        transition: all 300ms ease;
+        font-size: 18px;
+        &:hover {
+            background: var(--color-brand30);
+            transform: scale(1.05);
+        }
+    `;
+
+    inputContainer.appendChild(input);
+    inputContainer.appendChild(btnEnviar);
+    inputArea.appendChild(inputContainer);
+    chatArea.appendChild(inputArea);
+
+    // Montagem da estrutura
+    chatArea.appendChild(mensagens);
+    painel.appendChild(header);
+    painel.appendChild(menu);
+    painel.appendChild(chatArea);
+
+    document.body.appendChild(painel);
+
+    // Animação de entrada
+    requestAnimationFrame(() => {
+        painel.style.right = '0';
+    });
+
+    // Funcionalidade de enviar mensagem
+    btnEnviar.addEventListener('click', () => {
+        if (input.value.trim()) {
+            const userMsg = criarMensagem('user', input.value);
+            mensagens.appendChild(userMsg);
+            input.value = '';
+            mensagens.scrollTop = mensagens.scrollHeight;
+        }
+    });
+
+    // Tecla Enter para enviar
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && input.value.trim()) {
+            btnEnviar.click();
+        }
+    });
+
+    return {
+        painel,
+        input,
+        mensagens,
+        atualizarStatus
+    };
 }
 
 // Exporta a função globalmente
