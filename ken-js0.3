@@ -1,13 +1,9 @@
 function criarPainelLateral() {
-    if (document.getElementById('ken-painel')) return;
+    if (document.getElementById('kenAIPainel')) return;
 
+    // Adiciona animações globais logo no início
     const style = document.createElement('style');
     style.textContent = `
-        @keyframes ken-gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
         @keyframes messageIn {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -34,17 +30,18 @@ function criarPainelLateral() {
             100% { transform: rotate(360deg); }
         }
     `;
-    
+    document.head.appendChild(style);
+
     const painel = document.createElement('div');
-    painel.id = 'ken-painel';
+    painel.id = 'kenAIPainel';
     painel.style = `
         position: fixed !important;
         top: 0;
         right: -550px;
         width: 550px;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.95);
-        box-shadow: -5px 0 30px rgba(114, 41, 230, 0.15);
+        background: var(--color-shade10);
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
         transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
         z-index: 2147483647 !important;
         display: flex;
@@ -56,13 +53,11 @@ function criarPainelLateral() {
         overflow: hidden;
     `;
 
-    // Header com novo gradiente animado
+    // Header atualizado
     const header = document.createElement('div');
     header.style = `
         padding: 28px 32px;
-        background: linear-gradient(-45deg, #7229E6, #4A90E2, #7229E6, #2B5BE2);
-        background-size: 400% 400%;
-        animation: ken-gradient 15s ease infinite;
+        background: linear-gradient(135deg, var(--color-cyan40), var(--color-purple40));
         color: white;
         display: flex;
         justify-content: space-between;
@@ -146,55 +141,31 @@ function criarPainelLateral() {
         }, 400);
     });
 
-    // Tela de boas-vindas
-    const welcomeScreen = document.createElement('div');
-    welcomeScreen.className = 'ken-welcome';
-    welcomeScreen.innerHTML = `
-        <div style="
-            text-align: center;
-            padding: 40px 20px;
-            animation: messageIn 0.5s ease;
-        ">
-            <div style="font-size: 48px; margin-bottom: 20px;">👋</div>
-            <h2 style="
-                color: var(--color-brand40);
-                margin: 0 0 10px 0;
-                font-size: 24px;
-            ">Bem-vindo ao Ken AI</h2>
-            <p style="
-                color: var(--color-shade60);
-                margin: 0;
-                font-size: 14px;
-            ">Seu assistente inteligente para estudos</p>
-        </div>
-    `;
-
     // Menu atualizado
     const menu = document.createElement('div');
     menu.style = `
         display: flex;
         gap: 16px;
         padding: 16px 24px;
-        background: rgba(255, 255, 255, 0.95);
-        border-bottom: 1px solid rgba(114, 41, 230, 0.1);
+        background: var(--color-shade10);
+        border-bottom: 1px solid var(--color-shade30);
     `;
 
-    ['Chat', 'Status do AI →'].forEach((item, i) => {
+    ['Chat', 'Status do AI'].forEach((item, i) => {
         const btn = document.createElement('button');
         btn.innerHTML = item;
         btn.style = `
-            padding: 10px 20px;
-            background: ${i === 0 ? 'var(--color-brand40)' : 'transparent'};
-            color: ${i === 0 ? 'white' : 'var(--color-brand40)'};
-            border: ${i === 0 ? 'none' : '1px solid var(--color-brand40)'};
-            border-radius: 24px;
+            padding: 8px 16px;
+            background: ${i === 0 ? 'var(--color-purple40)' : 'transparent'};
+            color: ${i === 0 ? 'white' : 'var(--color-shade60)'};
+            border: ${i === 0 ? 'none' : '1px solid var(--color-shade30)'};
+            border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 300ms ease;
             &:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(114, 41, 230, 0.15);
+                background: ${i === 0 ? 'var(--color-purple30)' : 'var(--color-shade20)'};
             }
         `;
         menu.appendChild(btn);
