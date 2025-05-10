@@ -141,34 +141,31 @@ function criarPainelLateral() {
         }, 400);
     });
 
-    // Menu sofisticado
+    // Menu atualizado
     const menu = document.createElement('div');
     menu.style = `
         display: flex;
-        gap: 20px;
+        gap: 16px;
         padding: 16px 24px;
         background: var(--color-shade10);
         border-bottom: 1px solid var(--color-shade30);
-        overflow-x: auto;
-        scrollbar-width: none;
     `;
 
-    ['Chat', 'Recursos', 'Configurações'].forEach((item, i) => {
+    ['Chat', 'Status do AI'].forEach((item, i) => {
         const btn = document.createElement('button');
         btn.innerHTML = item;
         btn.style = `
             padding: 8px 16px;
-            background: ${i === 0 ? 'var(--colors-brand40)' : 'transparent'};
-            color: ${i === 0 ? 'white' : 'var(--colors-brand40)'};
-            border: ${i === 0 ? 'none' : '1px solid var(--colors-brand20)'};
-            border-radius: 12px;
+            background: ${i === 0 ? 'var(--color-purple40)' : 'transparent'};
+            color: ${i === 0 ? 'white' : 'var(--color-shade60)'};
+            border: ${i === 0 ? 'none' : '1px solid var(--color-shade30)'};
+            border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 300ms ease;
             &:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(114, 41, 230, 0.15);
+                background: ${i === 0 ? 'var(--color-purple30)' : 'var(--color-shade20)'};
             }
         `;
         menu.appendChild(btn);
@@ -204,11 +201,10 @@ function criarPainelLateral() {
         }
     `;
 
-    // Mensagens iniciais do chat
+    // Atualizar mensagens iniciais
     const mensagensIniciais = [
-        { tipo: 'bot', texto: 'Olá! 👋 Sou o Ken AI, seu assistente inteligente. Como posso ajudar você hoje?', delay: 500 },
-        { tipo: 'bot', texto: 'Posso ajudar com:', delay: 1500 },
-        { tipo: 'bot', texto: '• Explicação de conceitos\n• Resolução de exercícios\n• Dúvidas sobre matérias\n• Organização de estudos', delay: 2000 }
+        { tipo: 'bot', texto: 'Olá! Como posso ajudar você hoje?', delay: 500 },
+        { tipo: 'bot', texto: '💡 Posso:\n• Explicar um conceito\n• Analisar um texto\n• Gerar ideias', delay: 1500 }
     ];
 
     // Função de status de digitação
@@ -271,10 +267,10 @@ function criarPainelLateral() {
         const msgContent = document.createElement('div');
         msgContent.style = `
             max-width: calc(100% - 60px);
-            background: ${tipo === 'bot' ? 'white' : 'var(--color-cyan40)'};
+            background: ${tipo === 'bot' ? 'white' : 'var(--color-purple40)'};
             color: ${tipo === 'bot' ? 'var(--color-shade80)' : 'white'};
             padding: 16px 20px;
-            border-radius: 16px;
+            border-radius: 20px;
             font-size: 14px;
             line-height: 1.6;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -282,18 +278,6 @@ function criarPainelLateral() {
             border: 1px solid ${tipo === 'bot' ? 'var(--color-shade20)' : 'transparent'};
         `;
         msgContent.textContent = texto;
-
-        if (tipo === 'bot') {
-            const time = document.createElement('div');
-            time.style = `
-                font-size: 11px;
-                color: #666;
-                margin-top: 4px;
-                margin-left: 4px;
-            `;
-            time.textContent = 'Ken AI • agora';
-            msgContainer.appendChild(time);
-        }
 
         msgContainer.appendChild(avatar);
         msgContainer.appendChild(msgContent);
@@ -313,14 +297,14 @@ function criarPainelLateral() {
         display: flex;
         gap: 12px;
         align-items: center;
-        background: var(--color-shade10);
-        padding: 4px;
-        border-radius: 16px;
+        background: white;
+        padding: 8px;
+        border-radius: 24px;
         border: 1px solid var(--color-shade30);
         transition: all 300ms ease;
         &:focus-within {
-            border-color: var(--color-cyan40);
-            box-shadow: 0 0 0 2px var(--color-cyan10);
+            border-color: var(--color-purple40);
+            box-shadow: 0 0 0 2px var(--color-purple10);
         }
     `;
 
@@ -340,7 +324,7 @@ function criarPainelLateral() {
         }
     `;
 
-    // Botão de enviar
+    // Botão de enviar atualizado
     const btnEnviar = document.createElement('button');
     btnEnviar.innerHTML = `
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -349,11 +333,11 @@ function criarPainelLateral() {
         </svg>
     `;
     btnEnviar.style = `
-        background: var(--color-cyan40);
+        background: var(--color-purple40);
         border: none;
         width: 40px;
         height: 40px;
-        border-radius: 12px;
+        border-radius: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -361,8 +345,8 @@ function criarPainelLateral() {
         cursor: pointer;
         transition: all 300ms ease;
         &:hover {
-            background: var(--color-purple40);
-            transform: translateY(-2px);
+            background: var(--color-purple30);
+            transform: scale(1.05);
         }
     `;
 
