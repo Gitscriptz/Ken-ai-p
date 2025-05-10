@@ -269,6 +269,11 @@ function criarPainelLateral() {
     painel.appendChild(inputContainer);
     document.body.appendChild(painel); // Adicionar o painel ao body
 
+    // Anima o painel para a posição visível após ser adicionado
+    setTimeout(() => {
+        painel.style.right = '0';
+    }, 100);
+
     // Nova tela de boas-vindas com sugestões
     const welcomeScreen = `
         <div class="ken-welcome ken-fade-in" style="
@@ -344,6 +349,11 @@ function criarPainelLateral() {
 
     // Atualiza mensagens iniciais
     mensagens.innerHTML = welcomeScreen;
+
+    // Adiciona título ao header
+    titulo.appendChild(logo);
+    titulo.appendChild(tituloText);
+    header.appendChild(titulo);
 }
 
 // Exporta a função globalmente
