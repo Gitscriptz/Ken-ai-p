@@ -251,7 +251,9 @@ function criarPainelLateral() {
     inputContainer.appendChild(sendButton);
     painel.appendChild(inputContainer);
 
-    // Ajusta a área de mensagens para não sobrepor o input
+    // Criar área de mensagens
+    const mensagens = document.createElement('div');
+    mensagens.id = 'kenAIMensagens';
     mensagens.style = `
         flex: 1;
         overflow-y: auto;
@@ -265,6 +267,7 @@ function criarPainelLateral() {
     painel.appendChild(header);
     painel.appendChild(mensagens);
     painel.appendChild(inputContainer);
+    document.body.appendChild(painel); // Adicionar o painel ao body
 
     // Nova tela de boas-vindas com sugestões
     const welcomeScreen = `
